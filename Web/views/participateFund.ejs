@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <title>LoFun</title>
+</head>
+<body>
+
+  <%- include topbar.ejs %>
+
+
+  <!-- Begin page content --> 
+  <div>
+    <div>제목 : <%- name %></div>
+    <div>내용 : <%- content %></div>
+    <p>
+      <h6><b>주소</b></h6>
+        <a href="https://rinkeby.etherscan.io/address/<%- address %>" target="about:blank">
+          <p id="c1"><%- address %></p>
+        </a>                        
+        <button type="button" class="btn btn-outline-info btn-sm" onclick="copy_to_clipboard('#c1')">복사</button>
+    </p>
+    <button name="participateBtn" class="btn btn-primary" type="button" onclick="send('<%- address %>',0.01)">0.01 ETH 참여</button>         
+
+    <canvas id="qrcode"></canvas>
+
+    <p>
+      <h6><b>Participant List</b></h6>      
+    </p>
+    <table class="table table-sm" id='participatentTable'>
+    </table>                                                
+
+    <h6><b>Winners</b></h6>
+
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Address</th>                  
+          <th scope="col">Prize</th>                  
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">3</th>                  
+          <td>0x15697964ce7216fc8845001be0f9077e5eb2a267</td>                  
+          <td>0.99 ETH</td>
+        </tr>
+        <tr>
+          <th scope="row">2</th>                  
+          <td>0x6f357f0353e12b933e6caa46dd8cfd5b3713bb62</td>
+          <td>0.99 ETH</td>
+        </tr>
+        <tr>
+          <th scope="row">1</th>                  
+          <td>0x85f37d9cd74e39a0aa220e0104410c5f4c611d1a</td>
+          <td>0.99 ETH</td>
+        </tr>
+      </tbody>
+    </table>  
+  </div>  
+
+  <%- include footer.ejs %>  
+  <!-- End of page content -->
+
+  <!-- JavaScript -->  
+  <script src="/javascripts/qrcode.min.js"></script>
+  <script type="text/javascript">
+    // QR Code
+    QRCode.toCanvas(document.getElementById('qrcode'), '<%- address %>', function (error) {
+      if (error) console.error(error)
+      console.log('success!');
+    })
+
+    // Participate list//////////////////////////////////////
+    var participateList = <%- JSON.stringify(participateList) %>;
+    var html = '';
+
+    var table = document.getElementById('participatentTable');
+
+    var thead = table.createTHead();
+    var row = thead.insertRow(0);
+    var cell0 = row.insertCell(0);
+    var cell1 = row.insertCell(1);
+    cell0.innerHTML = "Time";
+    cell1.innerHTML = "Address";    
+
+    for(i = 0 ; i < participateList.length ; i++)
+    {
+      var row = thead.insertRow(i + 1);
+      var cell0 = row.insertCell(0);
+      var cell1 = row.insertCell(1);
+      cell0.innerHTML = "asdf";
+      cell1.innerHTML = participateList[i];    
+    }    
+    ////////////////////////////////////////////////////////
+
+    var account = "";
+
+    window.addEventListener('load', function() {
+                // Checking if Web3 has been injected by the browser (Mist/MetaMask)
+                if (typeof web3 !== 'undefined') {
+
+                    // Use the browser's ethereum provider
+                    var provider = web3.currentProvider
+                    console.log('Web3 is defined.');
+
+                    // version
+                    var version = web3.version.api;
+                    console.log('Version is' + version);
+                    //document.getElementById('Result_getWeb3Version').innerText = 'version : ' + version;
+
+
+                    //document.getElementById('clientStatus').innerText = 'Web3 is detected.';
+
+                    //account = web3.eth.accounts[0];
+                    var accountInterval = setInterval(function() {
+                      if (web3.eth.accounts[0] !== account) {
+                        account = web3.eth.accounts[0];
+                        //updateAccount();
+                        console.log('Account is changed to ' + account);
+                      }
+                    }, 1000);
+                  } else {
+                    console.log('No web3? You should consider trying MetaMask!')
+                    //document.getElementById('clientStatus').innerText = 'No Web3 Service. Please check your MetaMask!';
+                    $('participateBtn').attr('disabled', 'disabled');
+                  }
+                })
+    /*
+    document.getElementById('clientAccount').innerText = '';    
+    function updateAccount() {
+      document.getElementById('clientAccount').innerText = 'Client Node Eth Account:' + account;
+    }
+    */
+
+    // Contract
+    var contractAddress = '0x6FF25B3186371Ade81311260d237396CE7900aeD';
+
+    function updateContract() {
+      var contract = web3.eth.contract(JSON.parse(abi)).at(contractAddress);
+      var ParticipantList = contract.getLastSender(function(error, result) {
+        if (!error) {
+          console.log(result.length);
+          var cnt = 0;
+          for (var i = result.length - 1; i > result.length - 6; i--) {
+            var id = "Participant" + cnt;           
+            var text = result[i];            
+            document.getElementById(id).innerText = text;
+            cnt++;            
+          }
+
+          
+        } else
+        console.log(error);
+      });
+    }
+
+    // Button
+    function send(addr, amount) {
+      if (typeof web3 == 'undefined') {
+        alert("can't find Metamask.");
+        return;
+      }
+
+      if (typeof account == 'undefined') {
+        alert("Please, unlock Metamask and then retry.")
+        return
+      }
+      var sender = account;
+        var receiver = addr; //'0x5bFFF73baa916BFd05dC3cbd7a9254e092165258';
+        var amount = web3.toWei(amount, "ether");
+
+        web3.eth.sendTransaction({ from: sender, to: receiver, value: amount }, callBack);
+      }
+
+      function callBack(error, result) {
+        if (!error)
+          console.log(JSON.stringify(result));
+        else
+          console.error(error);
+      }
+    </script>
+
+  <script type="text/javascript">
+
+  </script>
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>    
+</body>
+</html>

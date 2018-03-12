@@ -1,11 +1,51 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+<!doctype html>
+<html lang="kr">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="stylesheets/style.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <title>LoFun</title>
+</head>
+
+<body>
+
+  <%- include topbar.ejs %>
+
+  <main role="main">
+    <section class="jumbotron text-center">
+      <div class="container">
+        <h3>클라우드 펀딩을 위한 스마트 계약 플랫폼</h3>
+        <p class="lead text-muted">
+          <h5>스마트계약 주소에 이더리움을 송금하는 것만으로 쉬운 참여가 가능합니다.</h5>
+          <h6>※거래소에서 제공하는 지갑으로 참여하지 마세요.</h6>
+          입금/출금시의 지갑주소가 동일해야합니다.
+        </p>
+        <p>
+          [이더리움 지갑 추천]<br>          
+          <a href="https://metamask.io/">Metamask</a> : 파이어폭스/크롬 브라우저 전용 지갑<br>
+          <a href="https://github.com/ethereum/mist/releases">Mist</a> : 이더리움 재단 지갑<br>
+          <a href="https://www.myetherwallet.com/">MyEtherWallet</a> : 웹 지갑
+        </p>
+      </div>
+    </section>
+
+    <div class="container">
+
+    </div>
+  </main>
+  <%- include footer.ejs %>
+  <!-- JavaScript -->
+  <script type="text/javascript">
+  </script>
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+
 </html>
