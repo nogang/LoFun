@@ -11,6 +11,7 @@ var team = require('./routes/team');
 var fundList = require('./routes/fundList');
 var participateFund = require('./routes/participateFund');
 var raiseFund = require('./routes/raiseFund');
+var raiseFundTest = require('./routes/raiseFundTest');
 
 var app = express();
 
@@ -32,6 +33,7 @@ app.use('/team', team);
 app.use('/fundList', fundList);
 app.use('/participateFund', participateFund);
 app.use('/raiseFund', raiseFund);
+app.use('/raiseFundTest', raiseFundTest);
 
 
 // catch 404 and forward to error handler

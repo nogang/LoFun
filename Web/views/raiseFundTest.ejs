@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="stylesheets/style.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <script>
+ 	window.onload = function() {
+ 		document.getElementById("deadline").valueAsDate = new Date();
+ 	}
+
+  var account;
+  </script>
+
+  <title>LoFun</title>
+</head>
+<body>
+
+  <%- include topbar.ejs %>
+
+
+  <!-- Begin page content -->
+  <section class="jumbotron">
+    <div class="container">
+      <h1>TEAM R</h1>
+      <h4> for 2018 Hackathon of Samsung Electronics</h4>
+      <div class="py-2">
+        <p class="lead text-muted">
+          <h6>Member 1: Ethan Kim</h6>
+          <h6>Member 2: Mickey</h6>
+          <h6>Member 3: </h6>
+          <h6>Member 4: </h6>
+          <h6>Member 5: </h6>
+        </p>
+      </div>
+    </div>
+  </section>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script>
+	function test(){
+		 if (typeof web3 == 'undefined') {
+	          alert("can't find Metamask.");
+	          return;
+	      }
+		 alert(web3);
+	}
+
+    function send(addr, amount) {
+        if (typeof web3 == 'undefined') {
+          alert("can't find Metamask.");
+          return;
+        }
+
+        if (typeof account == 'undefined') {
+          alert("Please, unlock Metamask and then retry.")
+          return
+        }
+        var sender = account;
+        var receiver = addr; //'0x5bFFF73baa916BFd05dC3cbd7a9254e092165258';
+        var amount = web3.toWei(amount, "ether");
+        web3.eth.sendTransaction({ from: sender, to: receiver, value: amount }, callBack);
+   }
+
+	function fundingInit() // 데이터 입력유무 확인 스크립트
+	{
+	    alert(document.fundingInfo.fundingname.value + " " +document.getElementById("deadline").value +" " + document.fundingInfo.fundraising_amount.value);
+	}
+
+  window.addEventListener('load', function() {
+  // Checking if Web3 has been injected by the browser (Mist/MetaMask)
+  if (typeof web3 !== 'undefined') {
+
+      // Use the browser's ethereum provider
+      var provider = web3.currentProvider
+      console.log('Web3 is defined.');
+
+      // version
+      var version = web3.version.api;
+      console.log('Version is' + version);
+      //document.getElementById('Result_getWeb3Version').innerText = 'version : ' + version;
+
+
+      //document.getElementById('clientStatus').innerText = 'Web3 is detected.';
+
+      //account = web3.eth.accounts[0];
+      var accountInterval = setInterval(function() {
+        if (web3.eth.accounts[0] !== account) {
+          account = web3.eth.accounts[0];
+          //updateAccount();
+          console.log('Account is changed to ' + account);
+        }
+        else {
+          console.log('Current Account is ' + account);
+        }
+      }, 1000);
+    } else {
+      console.log('No web3? You should consider trying MetaMask!')
+      //document.getElementById('clientStatus').innerText = 'No Web3 Service. Please check your MetaMask!';
+      $('participateBtn').attr('disabled', 'disabled');
+    }
+  })
+	</script>
+
+	<form action="/raiseFundTest" method="post" name="fundingInfo">
+		Funding name
+		<input type="text" name="fundingname" value="name" /> <br />
+
+		Deadline
+ 		<input type="date" name="deadline" id="deadline" min="2017-12-31" max="9999-12-31"><br /> <!-- 자바스크립트로 날자 동적으로 생성 -->
+
+		Fundraising amount
+		<input type="text" name="fundraising_amount" value="1" size="65" maxlength="64"> ehter <br />
+
+		<input type="button" value="등록" onClick="fundingInit()">
+		<input type="button" value="test" onClick="test()">
+		<input type="submit">
+
+	</form>
+  <%- include footer.ejs %>
+
+  <!-- JavaScript -->
+  <script type="text/javascript">
+
+  </script>
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>
