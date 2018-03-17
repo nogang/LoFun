@@ -63,13 +63,15 @@
     if (!error) {
       console.log(result);
 
-      if (typeof result.address != 'undefined') alert("펀딩이 발행되었다 : " + result.address);
+      if (typeof result.address != 'undefined') {
+        alert("펀딩이 발행되었다 : " + result.address);
+        location.href="/raiseFundTest";
+      }
     }
     else {
       console.error(error);
     }
   }
-
 
   window.addEventListener('load', function() {
     //alert(count++);
