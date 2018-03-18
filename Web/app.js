@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+
 var index = require('./routes/index');
 var users = require('./routes/users');
 var team = require('./routes/team');
@@ -12,12 +13,14 @@ var fundList = require('./routes/fundList');
 var participateFund = require('./routes/participateFund');
 var raiseFund = require('./routes/raiseFund');
 var raiseFundTest = require('./routes/raiseFundTest');
+var flashRotto = require('./routes/flashRotto');
 
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+//app.set('socket', socket);
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -34,6 +37,7 @@ app.use('/fundList', fundList);
 app.use('/participateFund', participateFund);
 app.use('/raiseFund', raiseFund);
 app.use('/raiseFundTest', raiseFundTest);
+app.use('/flashRotto', flashRotto);
 
 
 // catch 404 and forward to error handler

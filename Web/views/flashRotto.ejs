@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="stylesheets/style.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="/socket.io/socket.io.js"></script>
+  <!--script src="javascripts\socket.io.js"></script-->
+
+  <script>
+    var account;
+    var socket;
+  </script>
+
+  <title>LoFun</title>
+</head>
+<body>
+
+  <div>
+  <%- include topbar.ejs %>
+  </div>
+  <!-- Begin page content -->
+  <div>
+    <p id='timeoutCount'/> 준비 </p>
+    <input type='text' id='wei' value='1'/> wei
+    <input type='button' id="rottoButton" onclick="betClick();" value="BET" />
+    <input type='button' id="rottoStart" onclick="rottoStartClick();" value="START" />
+  </div>
+
+
+  <div style="position:absolute; bottom:0px;">
+    <%- include footer.ejs %>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    function sentEther (wei) {
+      if (typeof web3 == 'undefined') {
+        alert("can't find Metamask.");
+        return;
+      }
+
+      if (typeof account == 'undefined') {
+        alert("Please, unlock Metamask and then retry.")
+        return
+      }
+      var receiver = "0xcf1cc965f10bf1f0cdfe389121d2e58c9c49d2f7";
+      var amount = wei;
+      web3.eth.sendTransaction({ from: account, to: receiver, value: amount }, resultTransaction);
+    }
+
+    function betClick() {
+      var wei = document.getElementById("wei").value;
+      sentEther(wei);
+    }
+
+    function resultTransaction(error, result) {
+      if (!error)
+        console.log("success : " + JSON.stringify(result));
+      else
+        console.error("error : " + error);
+    }
+
+    function rottoStartClick() {
+      socket.emit("start_lotto", 3);
+    }
+
+    window.addEventListener('load', function() {
+      socket = io().connect();
+
+      socket.on("rottoTime", function (data){
+             document.getElementById("timeoutCount").innerHTML = data;
+      });
+
+      socket.on("killLotto", function (data){
+        console.log('receive kill lotto');
+        console.log(data + ' ' + account);
+        if (data == 1 && account == "0x8d3c1ba54cdd1f0d00d379c953ea0a392dde536c") {
+          console.log('tramsmitLotto');
+          sentEther(0);
+        }
+      });
+
+      if (typeof web3 !== 'undefined') {
+          // Use the browser's ethereum provider
+          var provider = web3.currentProvider
+          console.log('Web3 is defined.');
+          // version
+          var version = web3.version.api;
+          console.log('Version is' + version);
+
+          var accountInterval = setInterval(function() {
+            if (web3.eth.accounts[0] !== account) {
+              account = web3.eth.accounts[0];
+              //updateAccount();
+              console.log('Account is changed to ' + account);
+            }
+            else {
+              console.log('Current Account is ' + account);
+            }
+          }, 1000);
+      } else {
+          console.log('No web3? You should consider trying MetaMask!')
+          $('participateBtn').attr('disabled', 'disabled');
+      }
+    })
+  </script>
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>

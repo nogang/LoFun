@@ -4,6 +4,9 @@ var fs = require('fs');
 var solc = require('solc');
 var Web3 = require('web3');
 var web3 = new Web3();
+
+//const SocketIo = require('socket.io'); // 추가
+//const socketEvents = require('../public/javascripts/sockt.js'); // 추가
 //var Pudding = require('ether-pudding');
 web3.setProvider(new web3.providers.HttpProvider('https://rinkeby.infura.io/gGHwulfhVK8ouWn8aZMz'));	//'http://192.168.1.5:8545'
 
@@ -15,7 +18,9 @@ router.get('/', function(req, res, next) {
 										byteCode: '0',
 										abiDefinition: '0',
 										tryPublishFund: 0
-						});
+									});
+	//const io = SocketIo(server); // socket.io와 서버 연결하는 부분
+	//socketEvents(io); // 아까 만든 이벤트 연결
 });
 //visibility:hidden <-> visible
 

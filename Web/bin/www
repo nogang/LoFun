@@ -7,6 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('web:server');
 var http = require('http');
+var socket = require('socket.io');
 
 /**
  * Get port from environment and store in Express.
@@ -25,10 +26,46 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
+var count = 0;
+var lottoStart = 0;
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
+var io = socket.listen(server);
+io.sockets.on('connection', function (socket) {
+  console.log('hello world im a hot socket');
+
+  socket.on('event_name', function(data) {
+    console.log('Message from Client: ' + data);
+  });
+
+  socket.on('start_lotto', function(data) {
+    console.log('Message from Client: ' + data);
+    if (lottoStart == 0)
+    {
+      lottoStart = 1;
+      startLotto(data);
+    }
+  });
+
+});
+
+function startLotto(timeout) {
+  var intervalId = setInterval(function() {
+    if (timeout < 0){
+      io.sockets.emit("rottoTime","준비");
+      io.sockets.emit("killLotto",1);
+
+      clearInterval(intervalId);
+      lottoStart = 0;
+    }
+    else {
+      io.sockets.emit("rottoTime",timeout--);
+      console.log('interval: ' + timeout);
+    }
+  }, 1000);
+}
 /**
  * Normalize a port into a number, string, or false.
  */
