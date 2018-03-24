@@ -17,17 +17,13 @@
 
   <title>LoFun</title>
 </head>
-<body>
+<body onresize="parent.resizeTo(400,300)" onload="parent.resizeTo(400,300)">
 
-  <div>
-  <%- include topbar.ejs %>
-  </div>
   <!-- Begin page content -->
   <div>
     <p id='timeoutCount'/> 준비 </p>
     <input type='text' id='wei' value='1'/> wei
     <input type='button' id="rottoButton" onclick="betClick();" value="BET" />
-    <input type='button' id="rottoStart" onclick="rottoStartClick();" value="START" />
   </div>
 
 
@@ -47,7 +43,7 @@
         alert("Please, unlock Metamask and then retry.")
         return
       }
-      var receiver = "0xcf1cc965f10bf1f0cdfe389121d2e58c9c49d2f7";
+      var receiver = "0xbac29a018a14965ffc939bf8b5d7391e860ab497";
       var amount = wei;
       web3.eth.sendTransaction({ from: account, to: receiver, value: amount }, resultTransaction);
     }
@@ -68,6 +64,7 @@
       socket.emit("start_lotto", 3);
     }
 
+
     window.addEventListener('load', function() {
       socket = io().connect();
 
@@ -75,6 +72,7 @@
              document.getElementById("timeoutCount").innerHTML = data;
       });
 
+/*
       socket.on("killLotto", function (data){
         console.log('receive kill lotto');
         console.log(data + ' ' + account);
@@ -83,7 +81,7 @@
           sentEther(0);
         }
       });
-
+*/
       if (typeof web3 !== 'undefined') {
           // Use the browser's ethereum provider
           var provider = web3.currentProvider

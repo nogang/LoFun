@@ -8,7 +8,14 @@ var app = require('../app');
 var debug = require('debug')('web:server');
 var http = require('http');
 var socket = require('socket.io');
+var Web3 = require('web3');
 
+var web3 = new Web3();
+web3.setProvider(new web3.providers.HttpProvider('http://59.18.225.174:8545'));
+console.log("////////////////////////////////////////////");
+if (typeof web3 != undefined)
+console.log(web3.eth.coinbase);
+console.log("////////////////////////////////////////////");
 /**
  * Get port from environment and store in Express.
  */
@@ -52,10 +59,20 @@ io.sockets.on('connection', function (socket) {
 });
 
 function startLotto(timeout) {
+  io.sockets.emit("rottoPopup","/flashRotto");  //page주소
   var intervalId = setInterval(function() {
     if (timeout < 0){
       io.sockets.emit("rottoTime","준비");
-      io.sockets.emit("killLotto",1);
+      //io.sockets.emit("killLotto",1);
+      web3.personal.unlockAccount(web3.eth.coinbase, 'no2743');
+      web3.eth.sendTransaction({
+        from: web3.eth.coinbase,
+        to: "0xbac29a018a14965ffc939bf8b5d7391e860ab497",
+        value: '0'
+      }, function(error, hash){
+        console.log("error : " + error);
+        console.log("hash : " + hash);
+      });
 
       clearInterval(intervalId);
       lottoStart = 0;

@@ -1,9 +1,9 @@
 var express = require('express');
 var router = express.Router();
+var app = require('../app');
 
-/* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('raiseFund', { title: 'raiseFund'
+  res.render('manager', { title: 'manager'
 						});
 });
 

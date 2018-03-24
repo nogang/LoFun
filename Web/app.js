@@ -13,6 +13,7 @@ var fundList = require('./routes/fundList');
 var participateFund = require('./routes/participateFund');
 var raiseFund = require('./routes/raiseFund');
 var raiseFundTest = require('./routes/raiseFundTest');
+var manager = require('./routes/manager');
 var flashRotto = require('./routes/flashRotto');
 
 var app = express();
@@ -37,6 +38,7 @@ app.use('/fundList', fundList);
 app.use('/participateFund', participateFund);
 app.use('/raiseFund', raiseFund);
 app.use('/raiseFundTest', raiseFundTest);
+app.use('/manager', manager);
 app.use('/flashRotto', flashRotto);
 
 
